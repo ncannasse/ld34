@@ -1,6 +1,6 @@
 function main() {
-	if( global.game.test ) {
-		codeOk();
+	if( global.game.test || true ) {
+		interP();
 		return;
 	}
 	first();
@@ -14,11 +14,11 @@ function first() {
 		Do you remember anything ?
 	");
 
-	if( ask("Yes, maybe...", "I'm not sure...") ) {
+	if( !ask("Yes, maybe...", "I'm not sure...") ) {
 		talk("
 			Ha...
 			Err..
-			We haven't even started yet...
+			Let's retry...
 		");
 		reboot();
 		first();
@@ -26,7 +26,8 @@ function first() {
 	}
 
 	talk("
-		Don't worry!
+		...
+		Don't force yourself.
 		It's alright!
 		We'll get you back on your feet quickly.
 	");
@@ -48,7 +49,7 @@ function who() {
 		");
 		talk("
 			But don't try too hard remembering it for now!
-			You will need several steps before that...
+			We will get to that another day...
 		");
 		who();
 		return;
@@ -95,7 +96,7 @@ function neon() {
 
 function where() {
 
-	if( ask("Albert?", "Where am I") ) {
+	if( ask("Albert?", "Where am I?") ) {
 		talk("
 			You remember Albert ?
 			That's suprising...
@@ -154,8 +155,89 @@ function codeOk() {
 
 	talk("
 		Helen, I'm proud of you!
-		You are making great progresses.
+		You are making great progress.
 		I'm glad you are there with me, Darling.
 	");
+
+	wait(1);
+
+	talk("
+		...
+		You know what?
+		I have to go.
+		Let's talk another day, ok?
+	");
+
+	if( !ask() ) {
+		talk("
+			Sorry, Darling...
+			I'm running out of time.
+		");
+	} else {
+		talk("
+			I'm running out of time.
+			I'll be back soon.
+		");
+	}
+
+	reboot();
+	interP();
+
+
+}
+
+function interP() {
+
+	talk("
+		That day, you were at home.
+		I was not here to help you.
+		What did you do there ?
+	");
+
+	if( ask("I played", "Someone rang") ) {
+
+		talk("
+			...
+			That's not what I'm asking.
+		");
+
+		clearText();
+
+		if( xbox() != "XBABY" ) {
+			talk("
+				I NEED TO KNOW, Helen !
+				Was it Albert?
+				Or me?
+			");
+			interP();
+		} else {
+			// TODO
+		}
+
+	} else {
+
+		talk("
+			Really?
+			...
+			Was it Albert?
+			Or... someone else?
+			A stranger maybe.
+		");
+
+		clearText();
+		switch( interPhone() ) {
+		case "key":
+			sfx("womenShout");
+			talk("
+				WHY ?!???
+				WHY DID YOU OPEN THAT ${FUCKING} DOOR ?!?
+			",{speed:3});
+			wait(2);
+			clearText();
+			interP();
+		default:
+			interP();
+		}
+	}
 
 }

@@ -14,7 +14,7 @@ class ScriptGlobals {
 		game.event.wait(time, function() onEnd(null));
 	}
 
-	function a_talk( onEnd : Dynamic -> Void, text : String ) {
+	function a_talk( onEnd : Dynamic -> Void, text : String, ?options ) {
 		var lines = [for( l in StringTools.trim(text).split("\n") ) StringTools.trim(l)];
 		function next() {
 			var l = lines.shift();
@@ -24,10 +24,10 @@ class ScriptGlobals {
 			}
 			game.talk(l, function() {
 				if( lines.length >= 0 )
-					game.event.wait(game.test ? 0.2 : 1, next);
+					game.event.wait(game.test ? 0.2 : 0.6, next);
 				else
 					next();
-			});
+			},options);
 		}
 		next();
 	}
@@ -56,6 +56,26 @@ class ScriptGlobals {
 
 	public function initVariables( variables : Map<String,Dynamic> ) {
 		variables.set("global", this);
+	}
+
+	function a_interPhone( onEnd : Dynamic -> Void ) {
+		new Interphone(onEnd);
+	}
+
+	function a_xbox( onEnd : Dynamic -> Void ) {
+//		new XBox(onEnd);
+	}
+
+	function sfx( name, ?vol = 1. ) {
+		var r = try
+			hxd.Res.load("sfx/" + name+".mp3")
+		catch( e : hxd.res.NotFound )
+			hxd.Res.load("sfx/" + name+".wav");
+		r.toSound().play(false, vol);
+	}
+
+	function a_clearText(onEnd) {
+		game.clearText(function() onEnd(null));
 	}
 
 }

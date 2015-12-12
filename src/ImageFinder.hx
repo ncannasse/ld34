@@ -4,6 +4,7 @@ class ImageFinder {
 	var game : Game;
 	var bmp : h2d.Bitmap;
 	var stop = false;
+	var bloom : h2d.filter.Bloom;
 
 	public function new( r : hxd.res.Image, scale : Float, px : Int, py : Int, w : Int, h : Int, onEnd ) {
 		game = Game.inst;
@@ -14,33 +15,44 @@ class ImageFinder {
 		var b = new h2d.filter.Bloom(1, 1);
 		bmp.filters = [b];
 		bmp.alpha = 0;
+		bloom = b;
 
 		var i = new h2d.Interactive(w, h, bmp);
 		i.x = px;
 		i.y = py;
-
 		//i.backgroundColor = 0x10FF0000;
-
 		i.onClick = function(_) {
 			i.remove();
-
 			hxd.Res.sfx.button.play();
-
-			bmp.colorAdd = new h3d.Vector();
-			game.event.waitUntil(function(dt) {
-				bmp.colorAdd.r += dt * 0.0015;
-				bmp.colorAdd.g += dt * 0.0015;
-				bmp.colorAdd.b += dt * 0.0015;
-				b.amount += dt;
-				if( b.amount > 100 ) {
-					bmp.remove();
-					onEnd();
-					return true;
-				}
-				return false;
-			});
-			stop = true;
+			exit(onEnd);
 		};
+	}
+
+	function exit( onEnd ) {
+		if( stop ) return;
+		bmp.colorAdd = new h3d.Vector();
+		game.event.waitUntil(function(dt) {
+			bmp.colorAdd.r += dt * 0.0015;
+			bmp.colorAdd.g += dt * 0.0015;
+			bmp.colorAdd.b += dt * 0.0015;
+			bloom.amount += dt;
+			if( bloom.amount > 100 ) {
+				bmp.remove();
+				onEnd();
+				return true;
+			}
+			return false;
+		});
+		stop = true;
+	}
+
+	function addButton( x, y, w, h, onClick ) {
+		var p = new h2d.Interactive(w, h, bmp);
+		p.x = x;
+		p.y = y;
+		p.onClick = function(_) onClick();
+		//p.backgroundColor = 0x20FF0000;
+		return p;
 	}
 
 	function update(dt:Float) {

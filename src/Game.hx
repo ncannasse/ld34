@@ -1,6 +1,6 @@
 class Game extends hxd.App {
 
-	public var test = true;
+	public var test = false;
 
 	public var event : hxd.WaitEvent;
 	var script : Script;
@@ -10,6 +10,8 @@ class Game extends hxd.App {
 	var redText : h2d.HtmlText;
 	var askCallback : Bool -> Void;
 	var randomLetters : Array<h2d.Tile>;
+	var logo : h2d.Bitmap;
+	var globalClick : Void -> Void = function() {};
 
 	public function new() {
 		super();
@@ -70,6 +72,10 @@ class Game extends hxd.App {
 
 		hxd.Res.sfx.envLoop.play(true);
 
+		s2d.addEventListener(function(e) if( e.kind == ERelease ) {
+			globalClick();
+		});
+
 		var font = newText("").font;
 		var letters = [for( i in 0...26 ) font.getChar("A".code + i).t.clone()];
 		for( l in letters ) l.dy -= 4;
@@ -100,7 +106,7 @@ class Game extends hxd.App {
 		l.x = (s2d.width - l.tile.width) >> 1;
 		l.y = (s2d.height - l.tile.height) >> 1;
 		l.alpha = 0.25;
-
+		logo = l;
 
 		buttons = new h2d.Sprite(s2d);
 
@@ -166,11 +172,61 @@ class Game extends hxd.App {
 		start();
 	}
 
+	var randomTiles = new Array<h2d.Bitmap>();
+	var randomLines = [];
+
 	override function update(dt:Float) {
 		event.update(dt);
+
+		var t = hxd.Res.logo.toTile();
+		var x = Std.random(t.width >> 5) * 32;
+		var y = Std.random(t.height >> 5) * 32;
+		var t = t.sub(x, y, 32, 32, -16, -16);
+		var b = new h2d.Bitmap(t, logo);
+		b.x = x + 16;
+		b.y = y + 16;
+		b.blendMode = Multiply;
+		randomTiles.unshift(b);
+
+		if( Std.random(10) == 0 ) {
+			var l = new h2d.Bitmap(h2d.Tile.fromColor(0xFFFFFF, s2d.width), logo);
+			l.y = Std.random(s2d.height - 80);
+			l.alpha = (0.1 + Math.random() * 0.2) * 4;
+			randomLines.push(l);
+			l.x = -logo.x;
+			l.y -= logo.y;
+		}
+
+		for( l in randomLines.copy() ) {
+			l.y += Std.random(2) * 2 - 1;
+			l.alpha -= 0.04 * dt;
+			if( l.alpha < 0 ) {
+				l.remove();
+				randomLines.remove(l);
+			}
+		}
+
+		var pos = 0;
+		for( b in randomTiles.copy() ) {
+			b.alpha -= 0.05 * dt;
+			if( b.alpha < 0 ) {
+				b.remove();
+				randomTiles.remove(b);
+			}
+			if( pos++ % 5 == 0 ) {
+				b.rotation = Std.random(4) * (Math.PI / 2);
+				if( b.rotation == 0 || Std.random(2) == 0 )
+					b.tile.flipX();
+			}
+		}
 	}
 
-	public function talk( text : String, onEnd : Void -> Void ) {
+	public function talk( text : String, onEnd : Void -> Void, ?options : { ?speed : Float } ) {
+
+		if( options == null )
+			options = { };
+		if( options.speed == null )
+			options.speed = 1.;
 
 		var alpha = 0.6;
 		while( log.length > 10 )
@@ -197,16 +253,22 @@ class Game extends hxd.App {
 		var pos = 0.;
 		var last = 0;
 		var rand = text.length == 0 ? 1 : 0;
+		globalClick = function() {
+			pos = text.length;
+		};
 		event.waitUntil(function(dt) {
-			pos += dt * (test ? 2 : 0.5);
+			pos += dt * (test ? 2 : 0.5) * options.speed;
 			var ipos = Std.int(pos);
-			if( ipos != last ) {
+			var sfx = false;
+			while( ipos != last ) {
 				var char = text.charCodeAt(last);
 				if( (++rand) & 1 == 1 ) {
 					if( char == " ".code )
 						rand = 0;
-					else
+					else if( !sfx ) {
+						sfx = true;
 						hxd.Res.load("sfx/keyb" + (1 + Std.random(5)) + ".mp3").toSound().play();
+					}
 				}
 				// skip HTML
 				if( char == '<'.code ) {
