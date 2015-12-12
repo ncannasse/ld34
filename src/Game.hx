@@ -1,12 +1,15 @@
 class Game extends hxd.App {
 
+	public var test = true;
+
 	public var event : hxd.WaitEvent;
 	var script : Script;
-	var log : Array<h2d.Text> = [];
+	var log : Array<h2d.HtmlText> = [];
 	var buttons : h2d.Sprite;
-	var greenText : h2d.Text;
-	var redText : h2d.Text;
+	var greenText : h2d.HtmlText;
+	var redText : h2d.HtmlText;
 	var askCallback : Bool -> Void;
+	var randomLetters : Array<h2d.Tile>;
 
 	public function new() {
 		super();
@@ -14,20 +17,74 @@ class Game extends hxd.App {
 		event = new hxd.WaitEvent();
 	}
 
-	function newText( text, ?parent ) {
-		var tf = new h2d.Text(hxd.Res.ua_squared22.toFont(), parent);
+	public function newText( text, ?parent ) {
+		var tf = new h2d.HtmlText(hxd.Res.ua_squared22.toFont(), parent);
+		tf.loadImage = loadImage;
 		tf.text = text;
 		return tf;
+	}
+
+	function loadImage( src : String ) {
+		if( StringTools.startsWith(src, "letter") )
+			return randomLetters[Std.parseInt(src.substr(6))];
+		return null;
 	}
 
 	function playEnv( volume = 1. ) {
 		hxd.Res.load("sfx/envSfx" + (1 + Std.random(5)) + ".mp3").toSound().play(false, volume);
 	}
 
+	public function clearText( onEnd ) {
+		var hasText = false;
+		for( l in log.copy() )
+			if( l.y < -20 ) {
+				l.remove();
+				log.remove(l);
+			} else if( l.text != "" )
+				hasText = true;
+		if( !hasText ) {
+			onEnd();
+			return;
+		}
+		talk("", function() { } );
+		event.wait(0.25, function() clearText(onEnd));
+	}
+
+
+	public function reboot( onEnd ) {
+		clearText(function() {
+			hxd.Res.sfx.envSfx4.play();
+			new BlueScreen(function() {
+				hxd.Res.sfx.over.play();
+				event.wait(1, onEnd);
+			});
+		});
+	}
+
+
+	function start() {
+		script.call("main", [], function() trace("END"));
+	}
 
 	override function init() {
 
 		hxd.Res.sfx.envLoop.play(true);
+
+		var font = newText("").font;
+		var letters = [for( i in 0...26 ) font.getChar("A".code + i).t.clone()];
+		for( l in letters ) l.dy -= 4;
+		randomLetters = [for( l in letters ) l.clone()];
+		function switchLetters(_) {
+			for( i in 0...26 ) {
+				if( Std.random(3) != 0 ) continue;
+				var r = randomLetters[i];
+				var o = letters[Std.random(26)];
+				r.setPos(o.x, o.y);
+				r.setSize(o.width, o.height);
+			}
+			return false;
+		}
+		event.waitUntil(switchLetters);
 
 		var wait = 1.;
 		event.waitUntil(function(dt) {
@@ -39,12 +96,17 @@ class Game extends hxd.App {
 			return false;
 		});
 
+		var l = new h2d.Bitmap(hxd.Res.logo.toTile(), s2d);
+		l.x = (s2d.width - l.tile.width) >> 1;
+		l.y = (s2d.height - l.tile.height) >> 1;
+		l.alpha = 0.25;
+
 
 		buttons = new h2d.Sprite(s2d);
 
 		var green = new h2d.Bitmap(hxd.Res.buttonGreen.toTile(), buttons);
 		green.x = 30;
-		green.y = 300;
+		green.y = 350;
 		var tf = newText("", green);
 		tf.textColor = 0x38d930;
 		tf.x = 52;
@@ -53,7 +115,7 @@ class Game extends hxd.App {
 
 		var red = new h2d.Bitmap(hxd.Res.buttonRed.toTile(), buttons);
 		red.x = 400;
-		red.y = 300;
+		red.y = 350;
 		tf = redText = newText("", red);
 		tf.textColor = 0xd93232;
 		tf.x = 52;
@@ -74,7 +136,7 @@ class Game extends hxd.App {
 		var gint = new h2d.Interactive(green.tile.width, green.tile.height, green);
 		gint.onOver = function(_) {
 			green.color.set(1.2, 1.2, 1.2);
-			hxd.Res.sfx.over.play();
+			hxd.Res.sfx.over.play(false,0.5);
 		};
 		gint.onOut = function(_) {
 			green.color.set(1., 1., 1.);
@@ -86,7 +148,7 @@ class Game extends hxd.App {
 		var rint = new h2d.Interactive(red.tile.width, red.tile.height, red);
 		rint.onOver = function(_) {
 			red.color.set(1.2, 1.2, 1.2);
-			hxd.Res.sfx.over.play();
+			hxd.Res.sfx.over.play(false,0.5);
 		};
 		rint.onOut = function(_) {
 			red.color.set(1., 1., 1.);
@@ -98,8 +160,10 @@ class Game extends hxd.App {
 		buttons.visible = false;
 
 		script = new Script("");
-		script.load(hxd.Res.Script.entry.getText());
-		script.call("main", [], function() trace("END"));
+		script.load(hxd.Res.scenario.entry.getText());
+
+
+		start();
 	}
 
 	override function update(dt:Float) {
@@ -109,6 +173,8 @@ class Game extends hxd.App {
 	public function talk( text : String, onEnd : Void -> Void ) {
 
 		var alpha = 0.6;
+		while( log.length > 10 )
+			log.pop().remove();
 		for( l in log ) {
 			l.y -= 30;
 			var a = alpha;
@@ -121,6 +187,8 @@ class Game extends hxd.App {
 			alpha *= 0.6;
 		}
 
+		text = format(text);
+
 		var tf = newText(text, s2d);
 		tf.x = Std.int((s2d.width - tf.textWidth) * 0.5);
 		tf.text = "";
@@ -128,20 +196,28 @@ class Game extends hxd.App {
 		log.unshift(tf);
 		var pos = 0.;
 		var last = 0;
-		var first = true;
-		var rand = 0;
+		var rand = text.length == 0 ? 1 : 0;
 		event.waitUntil(function(dt) {
-			pos += dt * 0.5;
+			pos += dt * (test ? 2 : 0.5);
 			var ipos = Std.int(pos);
 			if( ipos != last ) {
+				var char = text.charCodeAt(last);
 				if( (++rand) & 1 == 1 ) {
-					if( text.charCodeAt(ipos - 1) == " ".code )
+					if( char == " ".code )
 						rand = 0;
 					else
 						hxd.Res.load("sfx/keyb" + (1 + Std.random(5)) + ".mp3").toSound().play();
 				}
-				tf.text = text.substr(0, ipos);
-				last = ipos;
+				// skip HTML
+				if( char == '<'.code ) {
+					while( text.charCodeAt(ipos) != '>'.code )
+						ipos++;
+					ipos++;
+					pos = ipos;
+					last = ipos - 1;
+				}
+				last++;
+				tf.text = text.substr(0, last);
 				if( last >= text.length ) {
 					onEnd();
 					return true;
@@ -149,6 +225,22 @@ class Game extends hxd.App {
 			}
 			return false;
 		});
+	}
+
+	public function format( text : String ) {
+		var prevs = [];
+		function urand() {
+			var x;
+			do {
+				x = Std.random(26);
+			} while( prevs.indexOf(x) >= 0 );
+			prevs.push(x);
+			if( prevs.length > 20 ) prevs.shift();
+			return x;
+		}
+		text = ~/\$\{([^}]+)\}/g.map(text, function(r) return [for( l in r.matched(1).split("") ) '<img src="letter${urand()}"/>'].join(""));
+		text = text.split(" !").join("!").split(" ?").join("?");
+		return text;
 	}
 
 	public function ask( yes : String, no : String, onChoice : Bool -> Void ) {
@@ -162,8 +254,15 @@ class Game extends hxd.App {
 			}
 			return false;
 		});
-		redText.text = yes;
-		greenText.text = no;
+		function setText( tf : h2d.Text, txt : String ) {
+			tf.text = format(txt);
+			tf.filter = true;
+			var s = 110 / tf.textWidth;
+			if( s > 1 ) s = 1;
+			tf.setScale(s);
+		}
+		setText(greenText, yes);
+		setText(redText, no);
 		askCallback = function(b) {
 			hxd.Res.sfx.button.play();
 			askCallback = function(b) { };
@@ -171,7 +270,7 @@ class Game extends hxd.App {
 				buttons.alpha -= 0.2 * dt;
 				if( buttons.alpha < 0 ) {
 					buttons.visible = false;
-					event.wait(0.5, function() onChoice(b));
+					event.wait(test ? 0.1 : 0.5, function() onChoice(b));
 					return true;
 				}
 				return false;
