@@ -1,6 +1,6 @@
 function main() {
 	if( global.game.test || true ) {
-		interP();
+		xboxDone();
 		return;
 	}
 	first();
@@ -211,7 +211,7 @@ function interP() {
 			");
 			interP();
 		} else {
-			// TODO
+			xboxDone();
 		}
 
 	} else {
@@ -240,4 +240,7 @@ function interP() {
 		}
 	}
 
+}
+
+function xboxDone() {
 }

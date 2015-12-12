@@ -73,13 +73,6 @@ class Interphone extends ImageFinder {
 
 	}
 
-	override function exit(onEnd) {
-		super.exit(onEnd);
-		videoMask.remove();
-		videoZoom.remove();
-		bl.remove();
-	}
-
 	function updateVideo() {
 		videoMask.colorAdd = new h3d.Vector(0.5, 0.5, 0.5, 0);
 		if( videoOn ) {

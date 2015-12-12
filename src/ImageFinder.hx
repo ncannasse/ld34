@@ -5,6 +5,7 @@ class ImageFinder {
 	var bmp : h2d.Bitmap;
 	var stop = false;
 	var bloom : h2d.filter.Bloom;
+	var int : h2d.Interactive;
 
 	public function new( r : hxd.res.Image, scale : Float, px : Int, py : Int, w : Int, h : Int, onEnd ) {
 		game = Game.inst;
@@ -26,15 +27,18 @@ class ImageFinder {
 			hxd.Res.sfx.button.play();
 			exit(onEnd);
 		};
+		int = i;
 	}
 
 	function exit( onEnd ) {
 		if( stop ) return;
-		bmp.colorAdd = new h3d.Vector();
+		var m = new h3d.Matrix();
+		m.identity();
+		bmp.filters.unshift( new h2d.filter.ColorMatrix(m) );
 		game.event.waitUntil(function(dt) {
-			bmp.colorAdd.r += dt * 0.0015;
-			bmp.colorAdd.g += dt * 0.0015;
-			bmp.colorAdd.b += dt * 0.0015;
+			m._41 += dt * 0.0015;
+			m._42 += dt * 0.0015;
+			m._43 += dt * 0.0015;
 			bloom.amount += dt;
 			if( bloom.amount > 100 ) {
 				bmp.remove();

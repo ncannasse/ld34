@@ -63,7 +63,7 @@ class ScriptGlobals {
 	}
 
 	function a_xbox( onEnd : Dynamic -> Void ) {
-//		new XBox(onEnd);
+		new XBox(onEnd);
 	}
 
 	function sfx( name, ?vol = 1. ) {
