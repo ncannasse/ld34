@@ -1,0 +1,10 @@
+-cp src
+-cp lib
+-swf ld34.swf
+-swf-header 640:480:60:000000
+-swf-version 12.0
+-main Game
+-lib heaps
+-lib castle
+-lib hscript
+-dce full
