@@ -55,7 +55,7 @@ class Game extends hxd.App {
 
 	public function reboot( onEnd ) {
 		clearText(function() {
-			hxd.Res.sfx.envSfx4.play();
+			hxd.Res.sfx.reboot.play();
 			new BlueScreen(function() {
 				hxd.Res.sfx.over.play();
 				event.wait(1, onEnd);
@@ -168,8 +168,10 @@ class Game extends hxd.App {
 		script = new Script("");
 		script.load(hxd.Res.scenario.entry.getText());
 
-
-		start();
+		if( test )
+			start();
+		else
+			new Title(start);
 	}
 
 	var randomTiles = new Array<h2d.Bitmap>();
@@ -257,7 +259,7 @@ class Game extends hxd.App {
 			pos = text.length;
 		};
 		event.waitUntil(function(dt) {
-			pos += dt * (test ? 2 : 0.5) * options.speed;
+			pos += dt * 0.5 * options.speed;
 			var ipos = Std.int(pos);
 			var sfx = false;
 			while( ipos != last ) {
@@ -272,11 +274,10 @@ class Game extends hxd.App {
 				}
 				// skip HTML
 				if( char == '<'.code ) {
-					while( text.charCodeAt(ipos) != '>'.code )
-						ipos++;
-					ipos++;
+					while( text.charCodeAt(last) != '>'.code )
+						last++;
+					ipos = last + 1;
 					pos = ipos;
-					last = ipos - 1;
 				}
 				last++;
 				tf.text = text.substr(0, last);
@@ -332,7 +333,7 @@ class Game extends hxd.App {
 				buttons.alpha -= 0.2 * dt;
 				if( buttons.alpha < 0 ) {
 					buttons.visible = false;
-					event.wait(test ? 0.1 : 0.5, function() onChoice(b));
+					event.wait(0.5, function() onChoice(b));
 					return true;
 				}
 				return false;

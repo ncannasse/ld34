@@ -1,5 +1,5 @@
 function main() {
-	if( global.game.test || true ) {
+	if( global.game.test ) {
 		xboxDone();
 		return;
 	}
@@ -163,6 +163,90 @@ function codeOk() {
 
 	talk("
 		...
+		Now that you remember Albert,
+		Do you think we can talk about you?
+	");
+
+	while( true ) {
+		if( ask() ) break;
+		talk("
+			...
+			Come on, Helen.
+			Don't be a child.
+			Let's talk about you.
+		");
+	}
+
+	talk("Good.");
+
+	clearText();
+
+	talk("
+		I don't think that you remember a lot of things.
+		...
+		You got into... an accident.
+		You were no longer with us for some time.
+	");
+	wait();
+	talk("
+		...
+		I was very sad.
+		We didn't have kids, but they were sad too.
+	");
+	questions();
+}
+
+var qKids = false;
+var qAccident = false;
+
+function questions() {
+
+	if( !qKids || !qAccident ) {
+
+		if( ask("Kids?", "Accident?") ) {
+			qKids = true;
+
+			talk("
+				...
+				Albert.
+				He was my good friend.
+				Yours too.
+				He's not a kid, you know ?
+				...
+			");
+
+			async(shake());
+			talk("I'LL ${FUCKING} KILL HIM!!!", { speed:5 } );
+			clearText();
+			talk("
+				I like Albert.
+				You too, right?
+			");
+
+		} else {
+			qAccident = true;
+
+			talk("
+				...
+				I'm not sure what happened.
+				I was not there.
+				...
+				I'll ask you about it later.
+			");
+			clearText();
+
+			if( !qKids )
+				talk("
+					Anything else?
+				");
+
+		}
+		questions();
+		return;
+	}
+
+	talk("
+		...
 		You know what?
 		I have to go.
 		Let's talk another day, ok?
@@ -189,7 +273,8 @@ function codeOk() {
 function interP() {
 
 	talk("
-		That day, you were at home.
+		That day.
+		The accident day, you were at home.
 		I was not here to help you.
 		What did you do there ?
 	");
@@ -209,6 +294,8 @@ function interP() {
 				Was it Albert?
 				Or me?
 			");
+			wait();
+			clearText();
 			interP();
 		} else {
 			xboxDone();
@@ -228,6 +315,7 @@ function interP() {
 		switch( interPhone() ) {
 		case "key":
 			sfx("womenShout");
+			async(shake(1,2));
 			talk("
 				WHY ?!???
 				WHY DID YOU OPEN THAT ${FUCKING} DOOR ?!?
@@ -243,4 +331,38 @@ function interP() {
 }
 
 function xboxDone() {
+
+	talk("
+		So...
+		That day.
+		Someone came in.
+		And you opened the door.
+	");
+
+	while( !ask() ) {
+		talk("
+			...
+			Yes you did.
+		");
+	}
+
+	talk("...");
+
+	sfx("womenShout");
+	async(shake());
+	talk("WHY DID YOU OPEN THAT ${FUCKING} DOOR ?!?",{speed:3});
+	clearText();
+
+	talk("
+		I understand.
+		That was an accident.
+		Alfred's fault.
+		...
+		Not yours.
+		...
+		But I didn't know.
+		...
+		IT WAS A MISUNDERSTANDING.
+	");
+
 }

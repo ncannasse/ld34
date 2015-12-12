@@ -24,7 +24,7 @@ class ScriptGlobals {
 			}
 			game.talk(l, function() {
 				if( lines.length >= 0 )
-					game.event.wait(game.test ? 0.2 : 0.6, next);
+					game.event.wait(0.6, next);
 				else
 					next();
 			},options);
@@ -76,6 +76,25 @@ class ScriptGlobals {
 
 	function a_clearText(onEnd) {
 		game.clearText(function() onEnd(null));
+	}
+
+	function a_shake(onEnd, amount = 1., time = 1. ) {
+		game.event.waitUntil(function(dt) {
+			game.s2d.y = hxd.Math.srand() * amount * 2.5 * (time < 0.25 ? time / 0.25 : 1);
+			time -= dt / 60;
+			if( time < 0 ) {
+				game.s2d.y = 0;
+				onEnd(null);
+				return true;
+			}
+			return false;
+		});
+	}
+
+	function async( rest : Dynamic -> Void, args : Array < (Dynamic -> Void)  -> Void > ) {
+		for( a in args )
+			a(function(_) {});
+		rest(null);
 	}
 
 }
