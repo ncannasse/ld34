@@ -19,7 +19,7 @@ class Digicode extends ImageFinder {
 		var clear = new h2d.Interactive(33, 33, bmp);
 		clear.x = 385;
 		clear.y = 685;
-		clear.onClick = function(_) {
+		clear.onPush = function(_) {
 			hxd.Res.sfx.button.play();
 			code = "";
 			refresh();
@@ -30,7 +30,7 @@ class Digicode extends ImageFinder {
 				var p = new h2d.Interactive(35, 33, bmp);
 				p.x = [253, 295, 336][x];
 				p.y = [600, 636, 675, 712][y] + x * 3;
-				p.onClick = function(_) {
+				p.onPush = function(_) {
 					if( code.length == 4 ) {
 						hxd.Res.sfx.over.play();
 						return;

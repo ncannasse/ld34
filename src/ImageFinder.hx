@@ -22,7 +22,7 @@ class ImageFinder {
 		i.x = px;
 		i.y = py;
 		//i.backgroundColor = 0x10FF0000;
-		i.onClick = function(_) {
+		i.onPush = function(_) {
 			i.remove();
 			hxd.Res.sfx.button.play();
 			exit(onEnd);
@@ -54,7 +54,7 @@ class ImageFinder {
 		var p = new h2d.Interactive(w, h, bmp);
 		p.x = x;
 		p.y = y;
-		p.onClick = function(_) onClick();
+		p.onPush = function(_) onClick();
 		//p.backgroundColor = 0x20FF0000;
 		return p;
 	}

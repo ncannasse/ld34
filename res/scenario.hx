@@ -1,6 +1,5 @@
 function main() {
-	//first();
-	sono();
+	first();
 }
 
 function first() {
@@ -367,15 +366,17 @@ function xboxDone() {
 var elAll = [];
 var elCount = 0;
 
-function inElevator() {
+function inElevator(?skip) {
 
-	talk("
-		That day.
-		Someone came in.
-		Who invited him?
-	");
+	if( !skip ) {
+		talk("
+			That day.
+			Someone came in.
+			Who invited him?
+		");
 
-	clearText();
+		clearText();
+	}
 
 	var code = elevator();
 	if( code != null ) {
@@ -478,10 +479,13 @@ function inElevator() {
 			I PROMISE.
 			YOU WILL LIVE AGAIN!
 		");
+	case null:
+		inElevator();
+		return;
 	}
 
 	if( elCount != 6 ) {
-		inElevator();
+		inElevator(true);
 		return;
 	}
 
@@ -502,7 +506,7 @@ function ending() {
 		Are you Helen?
 		The wife of Dr Heinsenberg?
 	");
-	while( !ask() ) {
+	if( !ask() ) {
 		talk("
 			...
 			Are you sure you are not Helen de Broglie?
@@ -649,6 +653,16 @@ function endingAsk2(?a,?b) {
 	reboot();
 
 	wait(2);
+
+	setColor(0x800020);
+	talk("
+		Hello Helen
+	");
+	clearText();
+
+	sono();
+
+	setColor(0x88CCFF);
 
 	talk("
 		Hello Helen AI.

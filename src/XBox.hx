@@ -16,9 +16,10 @@ class XBox extends ImageFinder {
 		bar.y = game.s2d.height - bar.tile.height;
 
 		tf = game.newText("", bar);
+		tf.font = hxd.Res.liquid22.toFont();
 		tf.scale(1.5);
 		tf.filter = true;
-		tf.dropShadow = { dx : 0, dy : 1, color : 0, alpha : 0.5 };
+		tf.dropShadow = { dx : 0, dy : 1, color : 0, alpha : 0.2 };
 
 		bar.visible = false;
 
@@ -35,7 +36,7 @@ class XBox extends ImageFinder {
 				html.shift();
 			}
 			tf.text = html.join("");
-			tf.y = -2;
+			tf.y = 0;
 			tf.x = game.s2d.width - (tf.textWidth  * tf.scaleX + 8);
 			bar.visible = true;
 
@@ -53,13 +54,12 @@ class XBox extends ImageFinder {
 			b.x = x;
 			b.y = y;
 
-			var i = addButton(x, y, w, h, function() {
-				hxd.Res.sfx.xboxButton.play();
-				onClick();
-			});
+			var i = addButton(x, y, w, h, null);
 			i.isEllipse = true;
 			i.onPush = function(_) {
 				b.y = y + 3;
+				hxd.Res.sfx.xboxButton.play();
+				onClick();
 			};
 			i.onRelease = function(_) {
 				b.y = y;

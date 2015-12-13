@@ -51,7 +51,7 @@ class Elevator extends ImageFinder {
 		addStage(505, 987, -1);
 		addStage(647, 972, 0);
 
-		addStage(680, 597, 666).onClick = function(_) {
+		addStage(680, 597, 666).onPush = function(_) {
 			hxd.Res.sfx.alarm.play();
 		};
 	}

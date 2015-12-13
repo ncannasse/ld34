@@ -1,6 +1,6 @@
 class Game extends hxd.App {
 
-	public var test = true;
+	public var test = false;
 
 	public var event : hxd.WaitEvent;
 	var script : Script;
@@ -160,7 +160,7 @@ class Game extends hxd.App {
 		gint.onOut = function(_) {
 			green.color.set(1., 1., 1.);
 		};
-		gint.onClick = function(_) {
+		gint.onPush = function(_) {
 			askCallback(true);
 		};
 
@@ -172,7 +172,7 @@ class Game extends hxd.App {
 		rint.onOut = function(_) {
 			red.color.set(1., 1., 1.);
 		};
-		rint.onClick = function(_) {
+		rint.onPush = function(_) {
 			askCallback(false);
 		};
 
