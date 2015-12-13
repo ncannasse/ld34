@@ -105,6 +105,10 @@ class ScriptGlobals {
 		rest(null);
 	}
 
+	function a_sono(onEnd) {
+		new Sono(function() onEnd(null));
+	}
+
 	function setColor( color : Int ) {
 		@:privateAccess game.textColor = color;
 	}

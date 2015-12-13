@@ -1,5 +1,6 @@
 function main() {
-	first();
+	//first();
+	sono();
 }
 
 function first() {

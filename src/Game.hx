@@ -1,6 +1,6 @@
 class Game extends hxd.App {
 
-	public var test = false;
+	public var test = true;
 
 	public var event : hxd.WaitEvent;
 	var script : Script;
@@ -37,6 +37,10 @@ class Game extends hxd.App {
 
 	function playEnv( volume = 1. ) {
 		hxd.Res.load("sfx/envSfx" + (1 + Std.random(5)) + ".mp3").toSound().play(false, volume);
+	}
+
+	public function playKeyb() {
+		hxd.Res.load("sfx/keyb" + (1 + Std.random(5)) + ".mp3").toSound().play();
 	}
 
 	public function clearText( onEnd ) {
@@ -279,7 +283,7 @@ class Game extends hxd.App {
 						rand = 0;
 					else if( !sfx ) {
 						sfx = true;
-						hxd.Res.load("sfx/keyb" + (1 + Std.random(5)) + ".mp3").toSound().play();
+						playKeyb();
 					}
 				}
 				// skip HTML
