@@ -587,7 +587,7 @@ function endingAsk2(?a,?b) {
 				I don't know Alice.
 				But I'm looking for her.
 			");
-			endingAsk2(b, true);
+			endingAsk2(a, true);
 		}
 		return;
 	}

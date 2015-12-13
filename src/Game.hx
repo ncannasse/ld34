@@ -71,11 +71,13 @@ class Game extends hxd.App {
 		script.call("main", [], function() trace("END"));
 	}
 
-	override function init() {
+	#if !debug
+	override function loadAssets(done) {
+		new hxd.fmt.pak.Loader(s2d, done);
+	}
+	#end
 
-		#if debug
-		new hxd.net.SceneInspector(s3d);
-		#end
+	override function init() {
 
 		envLoop = hxd.Res.sfx.envLoop.play(true);
 
@@ -352,7 +354,9 @@ class Game extends hxd.App {
 	public static var inst : Game;
 
 	static function main() {
-		hxd.Res.initEmbed({ compressSounds : true });
+		#if debug
+		hxd.Res.initEmbed( { compressSounds : true } );
+		#end
 		new Game();
 	}
 

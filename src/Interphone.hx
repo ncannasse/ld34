@@ -91,6 +91,8 @@ class Interphone extends ImageFinder {
 			videoZoom.alpha = 0;
 			videoMask.alpha = 1;
 			game.event.waitUntil(function(dt) {
+				if( videoMask.colorAdd == null )
+					return true;
 				videoMask.colorAdd.x = videoMask.colorAdd.y = videoMask.colorAdd.z -= 0.05 * dt;
 				if( videoMask.colorAdd.x < 0 ) {
 					videoMask.colorAdd = null;
