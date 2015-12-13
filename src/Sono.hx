@@ -91,8 +91,9 @@ class Sono extends ImageFinder {
 		addPush(277, 330, 54, 28, function() {
 			if( aliceTyping ) {
 				aliceTyping = false;
-				type("PAUSED");
+				password = null;
 			}
+			type("PAUSED");
 		});
 		addPush(332, 330, 63, 28, function() {
 			clear();
@@ -116,14 +117,7 @@ class Sono extends ImageFinder {
 		addPush(687, 329, 28, 29, function() {
 			if( password != null ) {
 				if( password.length == 4 ) {
-					if( password == PASS ) {
-						type("PASSWORD ACCEPTED");
-						type("YOU ARE NOW LOGIN AS ALICE");
-						isLogged = true;
-					} else {
-						type("WRONG PASSWORD");
-					}
-					password = null;
+					checkPass();
 				} else
 					password = password + "0";
 			}
@@ -184,6 +178,10 @@ class Sono extends ImageFinder {
 			play(hxd.Res.sfx.phone, true);
 		});
 		addPush(474, 250, 94, 15, function() {
+			if( password.length == 4 ) {
+				checkPass();
+				return;
+			}
 			clear();
 			screenText = "";
 			if( isLogged ) {
@@ -204,6 +202,17 @@ class Sono extends ImageFinder {
 			waitStyle = true;
 		});
 
+	}
+
+	function checkPass() {
+		if( password == PASS ) {
+			type("PASSWORD ACCEPTED");
+			type("YOU ARE NOW LOGIN AS ALICE");
+			isLogged = true;
+		} else {
+			type("WRONG PASSWORD");
+		}
+		password = null;
 	}
 
 	function clear() {
@@ -267,7 +276,7 @@ class Sono extends ImageFinder {
 			for( i in 0...10 + Std.random(10) )
 				s += String.fromCharCode("A".code + Std.random(26));
 			var pos = Std.random(s.length);
-			s = s.substr(0,pos) + PASS + s.substr(pos);
+			s = s.substr(0,pos) + " "+ PASS +" "+ s.substr(pos);
 			toType.push(s);
 		}
 
