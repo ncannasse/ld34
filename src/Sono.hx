@@ -178,7 +178,7 @@ class Sono extends ImageFinder {
 			play(hxd.Res.sfx.phone, true);
 		});
 		addPush(474, 250, 94, 15, function() {
-			if( password.length == 4 ) {
+			if( password != null && password.length == 4 ) {
 				checkPass();
 				return;
 			}
