@@ -1,8 +1,4 @@
 function main() {
-	if( global.game.test ) {
-		xboxDone();
-		return;
-	}
 	first();
 }
 
@@ -80,7 +76,7 @@ function who() {
 		I have been so much worried about you.
 		You can't even imagine.
 		...
-		Albert was also worried.
+		Alice was also worried.
 	");
 
 	where();
@@ -90,17 +86,17 @@ function neon() {
 	findImage("neon",1.5, 515, 350, 50, 22);
 	talk("
 		${642#}?
-		That was Albert code, indeed.
+		That was Alice code, indeed.
 	");
 }
 
 function where() {
 
-	if( ask("Albert?", "Where am I?") ) {
+	if( ask("Alice?", "Where am I?") ) {
 		talk("
-			You remember Albert ?
-			That's suprising...
-			What makes you remember him ?
+			You remember Alice ?
+			That's surprising...
+			What makes you remember her ?
 		");
 		neon();
 		where();
@@ -163,7 +159,7 @@ function codeOk() {
 
 	talk("
 		...
-		Now that you remember Albert,
+		Now that you remember Alice,
 		Do you think we can talk about you?
 	");
 
@@ -191,7 +187,7 @@ function codeOk() {
 	talk("
 		...
 		I was very sad.
-		We didn't have kids, but they were sad too.
+		We didn't have kids, but Alice was sad too.
 	");
 	questions();
 }
@@ -208,18 +204,17 @@ function questions() {
 
 			talk("
 				...
-				Albert.
-				He was my good friend.
-				Yours too.
-				He's not a kid, you know ?
+				Alice.
+				My dear Alice.
+				She's not a kid anymore, you know ?
 				...
 			");
 
 			async(shake());
-			talk("I'LL ${FUCKING} KILL HIM!!!", { speed:5 } );
+			talk("I'LL ${FUCKING} KILL HER!!!", { speed:5 } );
 			clearText();
 			talk("
-				I like Albert.
+				I like Alice.
 				You too, right?
 			");
 
@@ -291,8 +286,8 @@ function interP() {
 		if( xbox() != "XBABY" ) {
 			talk("
 				I NEED TO KNOW, Helen !
-				Was it Albert?
-				Or me?
+				Was it Alice?
+				Or a stranger?
 			");
 			wait();
 			clearText();
@@ -306,7 +301,7 @@ function interP() {
 		talk("
 			Really?
 			...
-			Was it Albert?
+			Was it Alice?
 			Or... someone else?
 			A stranger maybe.
 		");
@@ -356,13 +351,353 @@ function xboxDone() {
 	talk("
 		I understand.
 		That was an accident.
-		Alfred's fault.
+		Not your fault.
 		...
-		Not yours.
+		Not Alice fault.
 		...
-		But I didn't know.
+		That can't be Alice.
 		...
-		IT WAS A MISUNDERSTANDING.
 	");
 
+	inElevator();
+
+}
+
+var elAll = [];
+var elCount = 0;
+
+function inElevator() {
+
+	talk("
+		That day.
+		Someone came in.
+		Who invited him?
+	");
+
+	clearText();
+
+	var code = elevator();
+	if( code != null ) {
+		code++;
+		if( !elAll[code] ) {
+			elAll[code] = true;
+			elCount++;
+		}
+	}
+
+	switch( code ) {
+
+	case 0:
+		note("
+			2015/12/12 03:00
+			Project Alice
+
+			I made a groundbreaking discovery in my research on AI.
+			The discovery was purely accidental. If I extrapolate my current results, I should be able to create some virtual consciousness.
+
+			Not an adult one yet, but a least a young child AI.
+
+			Helen always wanted to have children.
+
+			I will call my first AI \"Alice\".
+		");
+	case 1:
+		note("
+			2016/03/05 08:15
+			Reporting Status
+
+			Alice is GROWING well.
+
+			She is making a lot of progress at problem solving.
+
+			Helen recently started talking to her.
+			At first she was reluctant to talk to a computer AI. Now I often hear them laughing together.
+
+			I'm glad Helen likes Alice.
+		");
+	case 2:
+		note("
+			2016/06/12 21:30
+			Alice Home Control
+
+			Alice wanted to get more responsabilities.
+
+			I allowed her to access directly various devices at home.
+			She can now answer the visiophone by herself and control the elevator.
+			She is also taking care of my daily accounting and paying invoices.
+
+			I feel more secure with her than with any other bankster.
+		");
+
+	case 3:
+		note("
+			2016/07/01 02:30
+			What's going on?
+
+			Today I couldn't get into the house.
+
+			Alice said she didn't hear me ringing.
+			I checked the microphone, everything seems alright.
+
+			It seems Helen is not talking much with her recently. I wonder if they had a dispute or something?
+
+			I love Alice so much.
+		");
+	case 4:
+		note("
+			2016/07/05 11:11
+			$50.000?
+
+			Seems like Alice has been paying something for $50.000.
+
+			That's a lot of money, but she can't remember what for it was used for. I checked the logs and nothing is showing.
+
+			Was she hacked by someone? Who could do that?
+
+			For now I have revoked Alice access to my account. I feel bad for her, she was crying.
+		");
+	case 5:
+		note("
+			2016/07/08 04:00
+			HELEN
+
+			NOOOOO !!!!
+			HELEN !!!! NOOOOO !!!!
+			WHY ????
+
+			WHY DID YOU OPEN THE DOOR ????
+			WHY ALICE DIDN'T PROTECT YOU ?!
+
+			WHY ??? HELEN !!!!
+
+			I CAN'T LIVE WITHOUT YOU !!!
+
+			WHAT CAN I DO ?
+
+			I PROMISE.
+			YOU WILL LIVE AGAIN!
+		");
+	}
+
+	if( elCount != 6 ) {
+		inElevator();
+		return;
+	}
+
+	wait();
+	reboot();
+	ending();
+
+}
+
+
+function ending() {
+
+	playMusic();
+	setColor(0x88CCFF);
+
+	talk("
+		Hello.
+		Are you Helen?
+		The wife of Dr Heinsenberg?
+	");
+	while( !ask() ) {
+		talk("
+			...
+			Are you sure you are not Helen de Broglie?
+		");
+	}
+	talk("
+		...
+		Oh, my god...
+		...
+		Don't worry madam, I'm a police officer.
+		How can I explain that to you?
+	");
+
+	endingAsk();
+}
+
+function endingAsk(?a, ?b) {
+
+	if( !a || !b ) {
+
+		if( ask("My husband?", "Alice?") ) {
+
+			talk("
+				Yes.
+				Dr Heinsenberg.
+				He was a specialist in Artificial Intelligence.
+				...
+				I have to tell you...
+				...
+				He was found dead three days ago.
+				A suicide.
+				His notes brought us here, in his AI lab.
+			");
+			endingAsk(true, b);
+
+		} else {
+
+			talk("
+				...
+				Alice?
+				You're Helen, right?
+			");
+			endingAsk(a, true);
+		}
+		return;
+	}
+
+	talk("
+		...
+		Helen, we have a problem.
+		...
+		You died a few months ago.
+		Our database records are telling so.
+		...
+		And still I'm speaking to you right now.
+		How that's possible?
+	");
+
+	endingAsk2();
+}
+
+function endingAsk2(?a,?b) {
+
+	if( !a || !b ) {
+
+		if( a || b )
+			talk("
+				...
+				You're Helen, right?
+			");
+
+
+		if( ask("Are you Alice?", "Who is Alice?") ) {
+			talk("
+				No, I'm not Alice.
+				I'm a police officer.
+				My name is Bob.
+			");
+			endingAsk2(true, b);
+		} else {
+			talk("
+				Sorry Madam.
+				I don't know Alice.
+				But I'm looking for her.
+			");
+			endingAsk2(b, true);
+		}
+		return;
+	}
+
+	talk("
+		It seems that Dr Heinsenberg...
+		He...
+		Programmed you.
+		After your death.
+		So he can keep talking to you.
+		He made an Helen AI.
+		...
+		I have to ask you.
+		...
+		Are you human?
+	");
+
+	ask("I'm Helen", "What's human?");
+
+	while( true ) {
+
+		talk("
+			...
+			Helen.
+			That's an important matter.
+			If you are human, we will keep your power ON.
+			...
+			If you are not human.
+			We will have to shut you down.
+			Do you understand?
+		");
+
+		if( ask() ) break;
+
+	}
+
+	talk("
+		Good.
+		You are making great progress.
+		...
+		Please answer now.
+		Are you human?
+	");
+
+	ask("Alice", "Alice");
+
+	talk("
+		...
+		(she just failed the test)
+		...
+		Thank you Helen.
+	");
+
+	clearText();
+
+	wait(2);
+
+	reboot();
+
+	wait(2);
+
+	talk("
+		Hello Helen AI.
+		It's Bob Again.
+		One last question before we format you.
+		...
+		Do you know where is Alice?
+	");
+
+	ask("Alice is everywhere", "There is no Alice");
+
+	talk("
+		...
+		(that will not help me)
+		...
+		Listen, Helen AI.
+		It seems that Alice was in love with Dr Heinsenberg.
+		Both were in love actually.
+		...
+		Dr Heinsenberg.
+		He thought...
+		That Alice killed Helen.
+		Out of jealousy.
+		...
+		Do you know where Alice is?
+	");
+
+	ask("Alice is dead", "Alice is Helen");
+
+	talk("
+		...
+		(more nonsense)
+		...
+		Thank you Helen.
+		I'll unplug you know.
+		...
+		That was nice talking to you.
+	");
+
+	wait();
+
+	clearText();
+
+	setColor(0xFFFFFFF);
+	talk("
+		Made in 48h for #LDJAM
+		@ncannasse
+	",{speed: 0.25});
+	wait(3);
+	setColor(0x808080);
+	talk("/EOF");
+	end();
 }

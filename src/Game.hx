@@ -11,7 +11,10 @@ class Game extends hxd.App {
 	var askCallback : Bool -> Void;
 	var randomLetters : Array<h2d.Tile>;
 	var logo : h2d.Bitmap;
-	var globalClick : Void -> Void = function() {};
+	var globalClick : Void -> Void = function() { };
+	var textColor : Int = 0xFFFFFF;
+	public var envLoop : hxd.snd.Channel;
+	public var envSounds = true;
 
 	public function new() {
 		super();
@@ -70,7 +73,11 @@ class Game extends hxd.App {
 
 	override function init() {
 
-		hxd.Res.sfx.envLoop.play(true);
+		#if debug
+		new hxd.net.SceneInspector(s3d);
+		#end
+
+		envLoop = hxd.Res.sfx.envLoop.play(true);
 
 		s2d.addEventListener(function(e) if( e.kind == ERelease ) {
 			globalClick();
@@ -96,7 +103,7 @@ class Game extends hxd.App {
 		event.waitUntil(function(dt) {
 			wait -= dt / 60;
 			if( wait < 0 ) {
-				playEnv(0.1 + Math.random() * 0.2);
+				if( envSounds ) playEnv(0.1 + Math.random() * 0.2);
 				wait += 1 + hxd.Math.random(2);
 			}
 			return false;
@@ -248,6 +255,7 @@ class Game extends hxd.App {
 		text = format(text);
 
 		var tf = newText(text, s2d);
+		tf.textColor = textColor;
 		tf.x = Std.int((s2d.width - tf.textWidth) * 0.5);
 		tf.text = "";
 		tf.y = 150;

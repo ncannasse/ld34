@@ -66,6 +66,10 @@ class ScriptGlobals {
 		new XBox(onEnd);
 	}
 
+	function a_elevator( onEnd : Dynamic -> Void ) {
+		new Elevator(onEnd);
+	}
+
 	function sfx( name, ?vol = 1. ) {
 		var r = try
 			hxd.Res.load("sfx/" + name+".mp3")
@@ -91,10 +95,29 @@ class ScriptGlobals {
 		});
 	}
 
+	function a_note( onEnd, text ) {
+		new Note(function() onEnd(null), text);
+	}
+
 	function async( rest : Dynamic -> Void, args : Array < (Dynamic -> Void)  -> Void > ) {
 		for( a in args )
 			a(function(_) {});
 		rest(null);
+	}
+
+	function setColor( color : Int ) {
+		@:privateAccess game.textColor = color;
+	}
+
+	function playMusic() {
+		game.envLoop.fadeTo(0.2,3);
+		game.envSounds = false;
+		game.envLoop = hxd.Res.sfx.music.play(true);
+	}
+
+	function a_end( _ ) {
+		game.envLoop.fadeTo(0, 4);
+		game.envSounds = true;
 	}
 
 }
