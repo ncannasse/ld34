@@ -14,7 +14,7 @@ class ImageFinder {
 		game.event.waitUntil(update);
 
 		var b = new h2d.filter.Bloom(1, 1);
-		bmp.filters = [b];
+		bmp.filter = b;
 		bmp.alpha = 0;
 		bloom = b;
 
@@ -34,7 +34,11 @@ class ImageFinder {
 		if( stop ) return;
 		var m = new h3d.Matrix();
 		m.identity();
-		bmp.filters.unshift( new h2d.filter.ColorMatrix(m) );
+		var cm = new h2d.filter.ColorMatrix(m);
+		if( bmp.filter == null )
+			bmp.filter = cm;
+		else
+			bmp.filter = new h2d.filter.Group([cm,bmp.filter]);
 		game.event.waitUntil(function(dt) {
 			m._41 += dt * 0.0015;
 			m._42 += dt * 0.0015;

@@ -18,7 +18,7 @@ class XBox extends ImageFinder {
 		tf = game.newText("", bar);
 		tf.font = hxd.Res.liquid22.toFont();
 		tf.scale(1.5);
-		tf.filter = true;
+		tf.smooth = true;
 		tf.dropShadow = { dx : 0, dy : 1, color : 0, alpha : 0.2 };
 
 		bar.visible = false;

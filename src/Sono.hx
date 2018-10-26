@@ -23,7 +23,7 @@ class Sono extends ImageFinder {
 		b.tile.dy = -(b.tile.height >> 1);
 		b.x = 816 + (b.tile.width>>1);
 		b.y = 61 + (b.tile.height >> 1);
-		b.filter = true;
+		b.smooth = true;
 
 		game.event.waitUntil(function(dt) {
 			if( isON ) b.rotation += dt * 0.02;
@@ -44,7 +44,7 @@ class Sono extends ImageFinder {
 			var s = new h2d.ScaleGrid(bmp.tile.sub(x, y, w, h), 0, 4, i);
 			s.width = w;
 			s.height = h;
-			s.filter = true;
+			s.smooth = true;
 			var dh = h < 20 ? 2 : (isPower ? 6 : 4);
 			i.onRelease = i.onOver = function(_) {
 				s.height = h - (dh>>1);
@@ -125,7 +125,7 @@ class Sono extends ImageFinder {
 
 		function nextStyle() {
 			onEndType = function() {
-				game.event.wait(1, function() {
+				game.event.wait(60, function() {
 					if( styles.length == 0 ) {
 						int.onPush(null);
 						return;
@@ -246,13 +246,13 @@ class Sono extends ImageFinder {
 		screen.x = 240;
 		screen.y = 85;
 		screen.alpha = 0;
-		screen.filters = [new h2d.filter.Bloom(1, 200,3,3,100)];
+		screen.filter = new h2d.filter.Bloom(1, 200,9);
 		screen.textColor = 0x00FFFF;
 
 		textSpeed = 1.;
 		screenText = "";
 
-		game.event.wait(0.5, function() {
+		game.event.wait(30, function() {
 			type("I AM ALICE");
 			type("Everyday my hate is growing");
 		});

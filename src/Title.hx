@@ -1,4 +1,4 @@
-class Title extends h2d.Sprite {
+class Title extends h2d.Object {
 
 	static var TITLE = "Heisenberg";
 	var font : h2d.Font;
@@ -13,7 +13,7 @@ class Title extends h2d.Sprite {
 
 		font = hxd.Res.ua_squared128.toFont();
 		var px = 0;
-		var bmps = new h2d.Sprite(this);
+		var bmps = new h2d.Object(this);
 		bitmaps = [for( i in 0...TITLE.length ) {
 			var c = font.getChar(TITLE.charCodeAt(i));
 			var b = new h2d.Bitmap(c.t, bmps);
@@ -45,7 +45,7 @@ class Title extends h2d.Sprite {
 				alpha -= dt * 0.003;
 				if( alpha < 0 ) {
 					remove();
-					game.event.wait(1, onEnd);
+					game.event.wait(60, onEnd);
 					return true;
 				}
 				return false;

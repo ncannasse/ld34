@@ -60,7 +60,7 @@ class Note extends ImageFinder {
 		tf.scale(2.2);
 		tf.x = 280;
 		tf.y = 340;
-		tf.filter  = true;
+		tf.smooth  = true;
 		tf.alpha = 0.8;
 		t = new TransformShader();
 		tf.addShader(t);

@@ -11,7 +11,7 @@ class ScriptGlobals {
 	}
 
 	function a_wait( onEnd : Dynamic -> Void, ?time = 1.) {
-		game.event.wait(time, function() onEnd(null));
+		game.event.wait(time*60, function() onEnd(null));
 	}
 
 	function a_talk( onEnd : Dynamic -> Void, text : String, ?options ) {
@@ -24,7 +24,7 @@ class ScriptGlobals {
 			}
 			game.talk(l, function() {
 				if( lines.length >= 0 )
-					game.event.wait(0.6, next);
+					game.event.wait(0.6*60, next);
 				else
 					next();
 			},options);

@@ -5,7 +5,7 @@ class Game extends hxd.App {
 	public var event : hxd.WaitEvent;
 	var script : Script;
 	var log : Array<h2d.HtmlText> = [];
-	var buttons : h2d.Sprite;
+	var buttons : h2d.Object;
 	var greenText : h2d.HtmlText;
 	var redText : h2d.HtmlText;
 	var askCallback : Bool -> Void;
@@ -56,7 +56,7 @@ class Game extends hxd.App {
 			return;
 		}
 		talk("", function() { } );
-		event.wait(0.25, function() clearText(onEnd));
+		event.wait(15, function() clearText(onEnd));
 	}
 
 
@@ -65,7 +65,7 @@ class Game extends hxd.App {
 			hxd.Res.sfx.reboot.play();
 			new BlueScreen(function() {
 				hxd.Res.sfx.over.play();
-				event.wait(1, onEnd);
+				event.wait(60, onEnd);
 			});
 		});
 	}
@@ -74,12 +74,6 @@ class Game extends hxd.App {
 	function start() {
 		script.call("main", [], function() trace("END"));
 	}
-
-	#if !debug
-	override function loadAssets(done) {
-		new hxd.fmt.pak.Loader(s2d, done);
-	}
-	#end
 
 	override function init() {
 
@@ -98,7 +92,7 @@ class Game extends hxd.App {
 				if( Std.random(3) != 0 ) continue;
 				var r = randomLetters[i];
 				var o = letters[Std.random(26)];
-				r.setPos(o.x, o.y);
+				r.setPosition(o.x, o.y);
 				r.setSize(o.width, o.height);
 			}
 			return false;
@@ -121,7 +115,7 @@ class Game extends hxd.App {
 		l.alpha = 0.25;
 		logo = l;
 
-		buttons = new h2d.Sprite(s2d);
+		buttons = new h2d.Object(s2d);
 
 		var green = new h2d.Bitmap(hxd.Res.buttonGreen.toTile(), buttons);
 		green.x = 30;
@@ -140,10 +134,10 @@ class Game extends hxd.App {
 		tf.x = 52;
 		tf.y = 10;
 
-		var gbloom = new h2d.filter.Bloom(1, 0, 4, 3, 0.1);
-		var rbloom = new h2d.filter.Bloom(1, 0, 4, 3, 0.1);
-		green.filters = [gbloom];
-		red.filters = [rbloom];
+		var gbloom = new h2d.filter.Bloom(1, 0, 12);
+		var rbloom = new h2d.filter.Bloom(1, 0, 12);
+		green.filter = gbloom;
+		red.filter = rbloom;
 		var bloomTime = 0.;
 		event.waitUntil(function(dt) {
 			bloomTime += dt * 0.1;
@@ -191,6 +185,7 @@ class Game extends hxd.App {
 	var randomLines = [];
 
 	override function update(dt:Float) {
+		dt *= 60; // old dt support
 		event.update(dt);
 
 		var t = hxd.Res.logo.toTile();
@@ -333,7 +328,7 @@ class Game extends hxd.App {
 		});
 		function setText( tf : h2d.Text, txt : String ) {
 			tf.text = format(txt);
-			tf.filter = true;
+			tf.smooth = true;
 			var s = 110 / tf.textWidth;
 			if( s > 1 ) s = 1;
 			tf.setScale(s);
@@ -347,7 +342,7 @@ class Game extends hxd.App {
 				buttons.alpha -= 0.2 * dt;
 				if( buttons.alpha < 0 ) {
 					buttons.visible = false;
-					event.wait(0.5, function() onChoice(b));
+					event.wait(30, function() onChoice(b));
 					return true;
 				}
 				return false;
@@ -358,9 +353,7 @@ class Game extends hxd.App {
 	public static var inst : Game;
 
 	static function main() {
-		#if debug
 		hxd.Res.initEmbed( { compressSounds : true } );
-		#end
 		new Game();
 	}
 

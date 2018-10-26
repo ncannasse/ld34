@@ -3,3 +3,6 @@
 /img
 
 /res.pak
+/*.js
+/*.map
+/res/.tmp

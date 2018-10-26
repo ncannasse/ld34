@@ -24,7 +24,7 @@ class BlueScreen extends h2d.Bitmap {
 		tf.text = "";
 		var pos = 0.;
 		var b = new h2d.filter.Bloom(1, 5);
-		this.filters = [b];
+		this.filter = b;
 		game.event.waitUntil(function(dt) {
 			pos += dt * 3;
 			tf.text = text.substr(0, Std.int(pos));

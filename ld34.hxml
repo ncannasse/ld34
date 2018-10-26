@@ -1,10 +1,7 @@
 -cp src
 -cp lib
--swf ld34.swf
--swf-header 640:480:60:000000
--swf-version 15.0
+-js ld34.js
 -main Game
 -lib heaps
 -lib hscript
 -dce full
--D advanced-telemetry
